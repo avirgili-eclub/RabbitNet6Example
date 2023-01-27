@@ -1,2 +1,8 @@
 # RabbitNet6Example
-Proyecto demo de implementacion de MessageBroker RabbitMQ con el framework .net 6
+Proyecto ejemplo, implementacion de MessageBroker RabbitMQ con el framework .NET 6
+
+Capas
+
+Producer (Asp.Net Core WebApplication)
+Consumer (Asp.Net Core WebApplication)
+Common (Class library .Net Core)
