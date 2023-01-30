@@ -1,6 +1,10 @@
 using System.Text;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RabbitDemo.Common.Services;
+using RabbitDemo.Producer.Model;
+using RabbitDemo.Producer.RabbitMq;
 
 namespace RabbitDemo.Producer.Controllers;
 
@@ -8,39 +12,49 @@ namespace RabbitDemo.Producer.Controllers;
 [ApiController]
 public class RabbitController : ControllerBase
 {
-    private readonly IRabbitMqService _rabbitMqService;
+    // private readonly IRabbitMqService _rabbitMqService;
+    private readonly IMessageProducer _messageProducer;
 
-    public RabbitController(IRabbitMqService rabbitMqService)
+    public RabbitController(IMessageProducer messageProducer)
     {
-        _rabbitMqService = rabbitMqService;
+        // _rabbitMqService = rabbitMqService;
+        _messageProducer = messageProducer;
     }
 
-    // [Route("sendmessage")]
     [HttpPost]
     public IActionResult SendMessage()
     {
-        using var connection = _rabbitMqService.CreateChannel();
-        using var model = connection.CreateModel();
-        var body = Encoding.UTF8.GetBytes("Hi");
-        model.BasicPublish("TestNetExchange",
-            string.Empty,
-            false,
-            basicProperties: null,
-            body: body);
+        // using var connection = _rabbitMqService.CreateChannel();
+        // using var model = connection.CreateModel();
+        // var body = Encoding.UTF8.GetBytes("Hi");
+        // model.BasicPublish("TestNetExchange",
+        //     string.Empty,
+        //     false,
+        //     basicProperties: null,
+        //     body: body);
+
+        _messageProducer.SendMessage("Hello");
 
         return Ok();
     }
+
+    [DisableCors]
     [HttpPost]
-    public IActionResult HelloWorldProducer()
+    public IActionResult HelloWorldProducer(HelloWorldDto message)
     {
-        using var connection = _rabbitMqService.CreateChannel();
-        using var model = connection.CreateModel();
-        var body = Encoding.UTF8.GetBytes("Hi");
-        model.BasicPublish("TestNetExchange",
-            string.Empty,
-            false,
-            basicProperties: null,
-            body: body);
+        //Example code
+
+        // Order order = new()
+        // {
+        //     ProductName = orderDto.ProductName,
+        //     Price = orderDto.Price,
+        //     Quantity = orderDto.Quantity
+        // };
+        // _context.Order.Add(order);
+        // await _context.SaveChangesAsync();
+        //
+        //_messageProducer.SendHelloWorldObject(order)
+        _messageProducer.SendHelloWorld(message);
 
         return Ok();
     }

@@ -1,6 +1,7 @@
 
 
 using RabbitDemo.Common.Extensions;
+using RabbitDemo.Producer.RabbitMq;
 
 namespace RabbitDemo.Producer;
 
@@ -16,13 +17,21 @@ public class Startup
     {
         services.AddControllers();
         services.AddCommonService(Configuration);
+        services.AddScoped<IMessageProducer, RabbitMQProducer>();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddHttpContextAccessor();
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseRouting();
-
+        
+        app.UseCors(builder => builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+        );
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapDefaultControllerRoute();
