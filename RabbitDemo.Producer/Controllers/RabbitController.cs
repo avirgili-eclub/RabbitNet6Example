@@ -12,27 +12,17 @@ namespace RabbitDemo.Producer.Controllers;
 [ApiController]
 public class RabbitController : ControllerBase
 {
-    // private readonly IRabbitMqService _rabbitMqService;
     private readonly IMessageProducer _messageProducer;
 
     public RabbitController(IMessageProducer messageProducer)
     {
-        // _rabbitMqService = rabbitMqService;
         _messageProducer = messageProducer;
     }
 
     [HttpPost]
     public IActionResult SendMessage()
     {
-        // using var connection = _rabbitMqService.CreateChannel();
-        // using var model = connection.CreateModel();
-        // var body = Encoding.UTF8.GetBytes("Hi");
-        // model.BasicPublish("TestNetExchange",
-        //     string.Empty,
-        //     false,
-        //     basicProperties: null,
-        //     body: body);
-
+        
         _messageProducer.SendMessage("Hello");
 
         return Ok();
@@ -42,7 +32,7 @@ public class RabbitController : ControllerBase
     [HttpPost]
     public IActionResult HelloWorldProducer(HelloWorldDto message)
     {
-        //Example code
+        //Example code with db context
 
         // Order order = new()
         // {
@@ -53,7 +43,7 @@ public class RabbitController : ControllerBase
         // _context.Order.Add(order);
         // await _context.SaveChangesAsync();
         //
-        //_messageProducer.SendHelloWorldObject(order)
+        //_messageProducer.SendMessageOrderCreated(order)
         _messageProducer.SendHelloWorld(message);
 
         return Ok();
