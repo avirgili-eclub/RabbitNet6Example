@@ -44,6 +44,8 @@ public class RabbitController : ControllerBase
         // await _context.SaveChangesAsync();
         //
         //_messageProducer.SendMessageOrderCreated(order)
+        //return Ok(new { id = order.Id });
+        
         _messageProducer.SendHelloWorld(message);
 
         return Ok();

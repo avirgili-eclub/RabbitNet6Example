@@ -14,4 +14,8 @@
       <ProjectReference Include="..\RabbitDemo.Common\RabbitDemo.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Services\ConsumerGenericMessage" />
+    </ItemGroup>
+
 </Project>

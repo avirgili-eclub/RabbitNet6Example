@@ -4,18 +4,18 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitDemo.Consumer.Services;
 
-public class ConsumerService : IConsumerService, IDisposable
+public class HelloWorldConsumerService : IHelloWorldConsumerService, IDisposable
 {
     private readonly IModel _model;
     private readonly IConnection _connection;
     
     //Obtener de las variables de entorno, como por ejemplo de appsettings.json para mejor configuracion segun ambiente
     //de trabajo
-    const string QUEUE_NAME = "TestNet6.q";
+    const string QUEUE_NAME = "HelloWorldNetExchange.q";
     const string EXCHANGE = "amq.direct";
-    const string ROUTING_KEY = "TestNet6";
+    private const string ROUTING_KEY = "HelloWorldNetExchange";
     
-    public ConsumerService(IRabbitMqService rabbitMqService)
+    public HelloWorldConsumerService(IRabbitMqService rabbitMqService)
     {
         _connection = rabbitMqService.CreateChannel();
         _model = _connection.CreateModel();
@@ -23,22 +23,25 @@ public class ConsumerService : IConsumerService, IDisposable
         _model.ExchangeDeclare(EXCHANGE, ExchangeType.Direct, durable: true, autoDelete: false);
         _model.QueueBind(QUEUE_NAME, EXCHANGE, ROUTING_KEY);
     }
-
-    public async Task ReadMessgaes()
+    
+    public async Task ConsumeHelloWorldMessage()
     {
         var consumer = new AsyncEventingBasicConsumer(_model);
-        consumer.Received += async (ch, ea) =>
+        consumer.Received += async (model, eventArgs) =>
         {
-            var body = ea.Body.ToArray();
-            var text = System.Text.Encoding.UTF8.GetString(body);
-            Console.WriteLine(text);
+            var body = eventArgs.Body.ToArray();
+            //Una vez obtenido el mensaje convertir al tipo de objecto que corresponde
+            var message = System.Text.Encoding.UTF8.GetString(body);
+            Console.WriteLine(message);
             await Task.CompletedTask;
-            _model.BasicAck(ea.DeliveryTag, false);
+            _model.BasicAck(eventArgs.DeliveryTag, false);
         };
-        _model.BasicConsume(QUEUE_NAME, false, consumer);
+        //autoAck poner verdadero, para que maneje automaticamente el reconocimiento de mensajes.
+        //Al objeto consumer le pasamos nuestro custom consumer que creamos al inicio
+        _model.BasicConsume(QUEUE_NAME, true, consumer);
         await Task.CompletedTask;
     }
-
+    
     public void Dispose()
     {
         if (_model.IsOpen)
@@ -46,4 +49,6 @@ public class ConsumerService : IConsumerService, IDisposable
         if (_connection.IsOpen)
             _connection.Close();
     }
+
+
 }

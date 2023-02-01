@@ -16,7 +16,9 @@ public class Startup
     {
         services.AddCommonService(Configuration);
         services.AddSingleton<IConsumerService, ConsumerService>();
+        services.AddSingleton<IHelloWorldConsumerService, HelloWorldConsumerService>();
         services.AddHostedService<ConsumerHostedService>();
+        services.AddHostedService<HelloWorldHostedService>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
