@@ -1,7 +1,7 @@
 
 
 using RabbitDemo.Common.Extensions;
-using RabbitDemo.Producer.RabbitMq;
+using RabbitDemo.Producer.Services;
 
 namespace RabbitDemo.Producer;
 
@@ -16,8 +16,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
-        services.AddCommonService(Configuration);
-        services.AddScoped<IMessageProducer, RabbitMQProducer>();
+        services.AddMessaging();
+        services.AddSingleton<IOrderService, OrderService>();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddHttpContextAccessor();
