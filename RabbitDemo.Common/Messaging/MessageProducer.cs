@@ -39,11 +39,13 @@ internal sealed class MessageProducer : IMessageProducer
         var json = JsonConvert.SerializeObject(message);
         var body = Encoding.UTF8.GetBytes(json);
         //para creaer properties para todos los que usan el defaultMessageProducer
+        var properties = _channel.CreateBasicProperties();
+        properties.Persistent = true;
         // var properties = _channel.CreateBasicProperties();
-        if(queue is not null && queue != "")
-            _channel.QueueDeclare(queue);
+        // if(queue is not null && queue != "")
+        //     _channel.QueueDeclare(queue);
         _channel.ExchangeDeclare(exchange, ExchangeType.Direct, true);
-        _channel.BasicPublish(exchange: exchange, routingKey: routingKey, body: body);
+        _channel.BasicPublish(exchange: exchange, routingKey: routingKey, body: body, basicProperties: properties);
         return Task.CompletedTask;
     } 
 
