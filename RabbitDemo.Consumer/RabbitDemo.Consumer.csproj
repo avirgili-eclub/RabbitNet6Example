@@ -21,12 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Ordering.DAL\Ordering.DAL.csproj" />
       <ProjectReference Include="..\RabbitDemo.Common\RabbitDemo.Common.csproj" />
       <ProjectReference Include="..\RabbitDemo.Producer\RabbitDemo.Producer.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Services\ConsumerGenericMessage" />
     </ItemGroup>
 
 </Project>

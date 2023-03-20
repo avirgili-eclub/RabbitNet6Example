@@ -11,6 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Ordering.DAL\Ordering.DAL.csproj" />
       <ProjectReference Include="..\RabbitDemo.Common\RabbitDemo.Common.csproj" />
     </ItemGroup>
 
